@@ -17,7 +17,11 @@ class Application
      */
     public function addMethod(MethodInterface $method)
     {
-        $this->methods[$method->getName()] = $method;
+        try
+        {
+            $this->methods[$method->getName()] = $method;
+        }
+        catch (\Throwable $e) {} // Method not found
     }
 
     /**
@@ -117,18 +121,24 @@ class Application
         }
         catch (JsonRpcException $e)
         {
-            $response = new Response(null);
-            $response->withError($e->getCode(), $e->getMessage());
+            if (isset($data['id']))
+            {
+                $response = $this->createResponseWithError($e->getCode(), $e->getMessage());
+            }
         }
         catch (\Exception $e)
         {
-            $response = new Response(null);
-            $response->withError(JsonRpcException::CODE_INTERNAL_ERROR, $e->getMessage());
+            if (isset($data['id']))
+            {
+                $response = $this->createResponseWithError(JsonRpcException::CODE_INTERNAL_ERROR, $e->getMessage());
+            }
         }
         catch (\Error $e)
         {
-            $response = new Response(null);
-            $response->withError(JsonRpcException::CODE_SERVER_ERROR, $e->getMessage());
+            if (isset($data['id']))
+            {
+                $response = $this->createResponseWithError(JsonRpcException::CODE_SERVER_ERROR, $e->getMessage());
+            }
         }
 
         return $response;
@@ -181,6 +191,18 @@ class Application
         }
 
         return new Request($method, $params, $id, $isNotification);
+    }
+
+    /**
+     * @param int $code
+     * @param string $message
+     * @return ResponseInterface
+     */
+    protected function createResponseWithError(int $code, string $message): ResponseInterface
+    {
+        $response = new Response(null);
+        $response->withError($code, $message);
+        return $response;
     }
 
     /**
