@@ -26,7 +26,7 @@ abstract class Method implements MethodInterface
      */
     public function run(RequestInterface $request): ?ResponseInterface
     {
-        return $this->execute($request, $this->createResponse($request));
+        return $this->execute($request, $request->isNotification() ? null : $this->createResponse($request));
     }
 
     /**
@@ -35,9 +35,6 @@ abstract class Method implements MethodInterface
      */
     protected function createResponse(RequestInterface $request): ?ResponseInterface
     {
-        if ($request->isNotification())
-            return null;
-
         return new Response($request->getId());
     }
 
