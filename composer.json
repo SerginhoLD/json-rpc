@@ -1,0 +1,12 @@
+{
+  "name": "serginhold/json-rpc",
+  "require": {
+    "php": ">=7.1.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "SerginhoLD\\Json\\Rpc\\": "src/"
+    }
+  }
+}
