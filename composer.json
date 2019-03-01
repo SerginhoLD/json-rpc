@@ -1,5 +1,6 @@
 {
   "name": "serginhold/json-rpc",
+  "description": "JSON-RPC 2.0",
   "require": {
     "php": ">=7.1.0",
     "ext-json": "*"

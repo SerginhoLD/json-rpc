@@ -1,4 +1,4 @@
-# JSON-RPC
+# JSON-RPC 2.0
 
 ```php
 <?php
