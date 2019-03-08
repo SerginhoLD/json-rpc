@@ -26,4 +26,7 @@ class JsonRpcException extends \Exception
 
     const CODE_PARSE_ERROR = -32700;
     const MESSAGE_PARSE_ERROR = 'Parse error';
+
+    /** @var int */
+    protected $code = self::CODE_INTERNAL_ERROR;
 }
