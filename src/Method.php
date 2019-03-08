@@ -23,10 +23,17 @@ abstract class Method implements MethodInterface
     /**
      * @param RequestInterface $request
      * @return ResponseInterface|null
+     * @throws JsonRpcException
      */
     public function run(RequestInterface $request): ?ResponseInterface
     {
-        return $this->execute($request, $request->isNotification() ? null : $this->createResponse($request));
+        $isNotification = $request->isNotification();
+        $response = $this->execute($request, $isNotification ? null : $this->createResponse($request));
+
+        if (!$isNotification && !$response)
+            throw new JsonRpcException('No response', JsonRpcException::CODE_INTERNAL_ERROR);
+
+        return $response;
     }
 
     /**
