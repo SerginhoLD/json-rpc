@@ -138,22 +138,26 @@ class Application
     }
 
     /**
-     * @param array $data json-rpc
+     * @param RequestInterface|array $request
      * @return ResponseInterface|null
      */
-    protected function execute(array $data): ?ResponseInterface
+    public function execute($request): ?ResponseInterface
     {
         $response = null;
 
         try
         {
-            $request = $this->createRequestFromArray($data);
-            $method = $request->getMethod();
+            $requestObj = $request;
+
+            if (!$requestObj instanceof RequestInterface)
+                $requestObj = $this->createRequestFromArray($request);
+
+            $method = $requestObj->getMethod();
 
             if (!isset($this->methods[$method]))
                 throw new JsonRpcException(JsonRpcException::MESSAGE_METHOD_NOT_FOUND, JsonRpcException::CODE_METHOD_NOT_FOUND);
 
-            $response = $this->methods[$method]->run($request);
+            $response = $this->methods[$method]->run($requestObj);
         }
         catch (JsonRpcException $e)
         {

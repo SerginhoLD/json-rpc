@@ -20,7 +20,7 @@ try
         'id' => 123,
     ];
 
-    $app->run($request);
+    $app->runData($request);
 }
 catch (\Throwable $e)
 {
